@@ -27,3 +27,39 @@ plot(cars)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+## What is the average daily activity pattern?
+
+## Imputing missing values
+
+## Are there differences in activity patterns between weekdays and weekends?
+
+# Assumes that working directory contains "activity.csv"
+act <- read.csv("activity.csv", nrows = 18000)
+
+#What is mean total number of steps taken per day?
+totStepsPerDay <- aggregate(steps ~ date, data = act, FUN = sum, na.action = na.pass)
+hist(totStepsPerDay$steps)
+mean(totStepsPerDay$steps)
+median(totStepsPerDay$steps)
+
+#What is the average daily activity pattern?
+avgStepsPerInterval <- aggregate(steps ~ interval, data = act, FUN = mean)
+plot(avgStepsPerInterval, type = "l")
+with(avgStepsPerInterval, interval[which.max(steps)])
+
+#Imputing missing values
+# Strategy: replace with average for the interval. Give avgStepsPerInterval
+# row.names(). Force act$interval to character. subset for missing data.
+# replace with value in col 2 of named row in avgStepsPerInterval.
+sum(rowSums(is.na(act) > 0)) #the logical tests if any row has na rather than count all nas
+actImputed <- act
+missingSteps <- is.na(actImputed$steps)
+row.names(avgStepsPerInterval) <- avgStepsPerInterval$interval
+missingIntervals <- as.character(actImputed[missingSteps,3])
+actImputed[missingSteps,1] = avgStepsPerInterval[missingIntervals,2]
+totStepsPerDay_Imputed <- aggregate(steps ~ date, data = actImputed, FUN = sum)
+hist(totStepsPerDay_Imputed$steps)
+mean(totStepsPerDay_Imputed$steps)
+median(totStepsPerDay_Imputed$steps)
+
