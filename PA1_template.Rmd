@@ -1,25 +1,29 @@
 ---
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
+title: "PA1_template.Rmd"
+output: html_document
 ---
 
+Note: this document assumes that the R markdown file and the data are in the same directory, and that directory is set to the working directory (e.g., using `setwd()`).
 
-## Loading and preprocessing the data
+## Load and process the data
+First we read in the data from the csv file into a variable called `actdata`. Next we need to process the data:
+1. To make a histogram of the number of steps taken each day and
+2. To calculate and report the mean and median total number of steps taken per day
+This wording is confusing to me. From reading the forums, I think we're asked to process the raw data to find the total number of steps each day. Then we are supposed to use that processed data to show a histogram of the number of steps taken each day, which would show a count of the number of days with 0-n steps, with n-2n, 2-3n, etc. Finally, we are supposed to use the processed data to find the mean and median number of daily steps.
 
+```{r}
+actdata <- read.csv("activity 2.csv")
+daystats <- aggregate(steps ~ date, actdata, sum, na.rm = TRUE)
+hist(daystats$steps, breaks = 10)
+mean(daystats$steps)
+median(daystats$steps)
 
+```
 
-## What is mean total number of steps taken per day?
+You can also embed plots, for example:
 
+```{r, echo=FALSE}
+plot(cars)
+```
 
-
-## What is the average daily activity pattern?
-
-
-
-## Imputing missing values
-
-
-
-## Are there differences in activity patterns between weekdays and weekends?
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
